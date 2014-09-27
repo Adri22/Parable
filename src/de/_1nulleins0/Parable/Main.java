@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferStrategy;
 
@@ -13,12 +14,15 @@ public class Main extends Canvas implements Runnable {
     private boolean running = false;
     private Thread thread;
 
+    private Point[] dataPoints;
+
     public static int WIDTH;
     public static int HEIGHT;
 
     private void init() {
 	WIDTH = getWidth();
 	HEIGHT = getHeight();
+	dataPoints = new Point[9];
     }
 
     public synchronized void start() {
@@ -43,10 +47,26 @@ public class Main extends Canvas implements Runnable {
     }
 
     private void update() {
+	int variableA = Integer.parseInt(ControlPanel.a.getText());
+	int variableD = Integer.parseInt(ControlPanel.d.getText());
+	int variableE = Integer.parseInt(ControlPanel.e.getText());
 
+	int x;
+	int y;
+
+	for (int i = 0; i < dataPoints.length; i++) {
+	    x = (int) (Math.floor(dataPoints.length / 2) - i);
+	    y = (int) ((variableA * Math.pow((x - variableD), 2)) + variableE);
+	    dataPoints[i] = new Point();
+	    dataPoints[i].setLocation(x, y);
+	    // System.out.println("x: " + dataPoints[i].getX() + " - y: " +
+	    // dataPoints[i].getY());
+	}
+	// System.out.println(" ------- ");
     }
 
     private void render() {
+	int pixelStep = 10; // weird .. i know ...
 	BufferStrategy bs = this.getBufferStrategy();
 
 	if (bs == null) {
@@ -59,51 +79,23 @@ public class Main extends Canvas implements Runnable {
 	g2d.setColor(Color.black);
 	g2d.fillRect(0, 0, getWidth(), getHeight());
 
-	// render stuff here
+	g2d.translate(WIDTH / 2, HEIGHT / 2);
 
-	// --- path testing
-	
-        g2d.setStroke(new BasicStroke(4.0f));
-        g2d.setPaint(Color.GREEN);
- 
-        int[] xPoints = {10, 50, 100, 150, 200, 250, 300, 350};
-        int[] yPoints = {10, 50,  10,  50,  10,  50,  10,  50};
-        GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD,
-                xPoints.length);
- 
-        //
-        // Adds point to the path by moving to the specified
-        // coordinates.
-        //
-        path.moveTo(xPoints[0], yPoints[0]);
-        for (int i = 1; i < xPoints.length; i++) {
-            //
-            // Adds a point to the path by drawing a straight
-            // line from the current position to the specified
-            // coordinates.
-            //
-            path.lineTo(xPoints[i], yPoints[i]);
-        }
-        path.curveTo(150, 150, 300, 300, 50, 250);
-        path.closePath();
-        g2d.draw(path);
- 
-        //
-        // Draw another path, a start
-        //
-        g2d.setPaint(Color.RED);
-        g2d.setStroke(new BasicStroke(2.0f));
-        path = new GeneralPath(GeneralPath.WIND_NON_ZERO);
-        path.moveTo(200, 50);
-        path.lineTo(270, 300);
-        path.lineTo(100, 120);
-        path.lineTo(300, 120);
-        path.lineTo(130, 300);
-        path.closePath();
-        g2d.draw(path);
-	
-	// --- path testing _ end
-	
+	// --- path _ start
+
+	g2d.setStroke(new BasicStroke(1.0f));
+	g2d.setPaint(Color.GREEN);
+
+	GeneralPath path = new GeneralPath();
+
+	path.moveTo((int) dataPoints[0].getX() * pixelStep, (int) dataPoints[0].getY() * pixelStep);
+	for (int i = 0; i < dataPoints.length; i++) {
+	    path.lineTo(dataPoints[i].getX() * pixelStep, dataPoints[i].getY() * pixelStep);
+	}
+	g2d.draw(path);
+
+	// --- path _ end
+
 	g2d.dispose();
 	bs.show();
     }
