@@ -70,7 +70,7 @@ public class Main extends Canvas implements Runnable {
 
 	for (float i = (0 - WIDTH); i < WIDTH; i += 0.01) {
 	    x = i;
-	    y = (float) ((variableA * Math.pow((x + variableD), 2)) + variableE);
+	    y = (float) (variableA * Math.pow((x - variableD), 2) + variableE);
 	    Point p = new Point();
 	    p.setLocation(x, y);
 	    dataPoints.add(p);
@@ -78,10 +78,10 @@ public class Main extends Canvas implements Runnable {
     }
 
     private void render() {
-	BufferStrategy bs = this.getBufferStrategy();
+	BufferStrategy bs = getBufferStrategy();
 
 	if (bs == null) {
-	    this.createBufferStrategy(3);
+	    createBufferStrategy(3);
 	    return;
 	}
 
@@ -90,7 +90,9 @@ public class Main extends Canvas implements Runnable {
 	g2d.setColor(Color.black);
 	g2d.fillRect(0, 0, WIDTH, HEIGHT);
 	g2d.translate(WIDTH / 2, HEIGHT / 2);
-	g2d.rotate(Math.toRadians(180));
+	// g2d.rotate(Math.toRadians(180)); // moep ...
+	g2d.scale(1.0, -1.0); // this seems to be a better solution to flip the
+			      // coords-system
 
 	// --- coords _ start
 
@@ -113,7 +115,7 @@ public class Main extends Canvas implements Runnable {
 
 	// --- path _ start
 
-	g2d.setStroke(new BasicStroke(1.5f));
+	g2d.setStroke(new BasicStroke(1.0f));
 	g2d.setPaint(Color.GREEN);
 
 	GeneralPath path = new GeneralPath();
