@@ -63,15 +63,14 @@ public class Main extends Canvas implements Runnable {
 	    variableE = 0;
 	}
 
-	int xLength = 1000;
 	float x;
 	float y;
 
 	dataPoints.clear();
 
-	for (int i = (0 - xLength - 1); i < xLength; i++) {
+	for (float i = (0 - WIDTH); i < WIDTH; i += 0.01) {
 	    x = i;
-	    y = (float) ((variableA * Math.pow((x - variableD), 2)) + variableE);
+	    y = (float) ((variableA * Math.pow((x + variableD), 2)) + variableE);
 	    Point p = new Point();
 	    p.setLocation(x, y);
 	    dataPoints.add(p);
@@ -93,9 +92,28 @@ public class Main extends Canvas implements Runnable {
 	g2d.translate(WIDTH / 2, HEIGHT / 2);
 	g2d.rotate(Math.toRadians(180));
 
-	// --- path _ start
+	// --- coords _ start
 
 	g2d.setStroke(new BasicStroke(1.0f));
+	g2d.setPaint(Color.WHITE);
+
+	GeneralPath xAxis = new GeneralPath();
+
+	xAxis.moveTo(-(WIDTH / 2), 0);
+	xAxis.lineTo(WIDTH / 2, 0);
+	g2d.draw(xAxis);
+
+	GeneralPath yAxis = new GeneralPath();
+
+	yAxis.moveTo(0, WIDTH / 2);
+	yAxis.lineTo(0, -(WIDTH / 2));
+	g2d.draw(yAxis);
+
+	// --- coords _ end
+
+	// --- path _ start
+
+	g2d.setStroke(new BasicStroke(1.5f));
 	g2d.setPaint(Color.GREEN);
 
 	GeneralPath path = new GeneralPath();

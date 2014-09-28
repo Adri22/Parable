@@ -23,9 +23,9 @@ public class ControlPanel extends JPanel {
 	formularPanel = new JPanel();
 	formula1 = new JLabel("y = ");
 	a = new JTextField(3);
-	formula2 = new JLabel("(x - ");
+	formula2 = new JLabel("(x + ");
 	d = new JTextField(3);
-	formula3 = new JLabel(") + ");
+	formula3 = new JLabel(")² + ");
 	e = new JTextField(3);
 
 	a.setText("1");
