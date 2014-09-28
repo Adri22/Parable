@@ -3,10 +3,12 @@ package de._1nulleins0.Parable;
 import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferStrategy;
+import java.util.Vector;
 
 public class Main extends Canvas implements Runnable {
 
@@ -14,7 +16,7 @@ public class Main extends Canvas implements Runnable {
     private boolean running = false;
     private Thread thread;
 
-    private Point[] dataPoints;
+    private Vector dataPoints;
 
     public static int WIDTH;
     public static int HEIGHT;
@@ -22,7 +24,7 @@ public class Main extends Canvas implements Runnable {
     private void init() {
 	WIDTH = getWidth();
 	HEIGHT = getHeight();
-	dataPoints = new Point[9];
+	dataPoints = new Vector();
     }
 
     public synchronized void start() {
@@ -47,26 +49,36 @@ public class Main extends Canvas implements Runnable {
     }
 
     private void update() {
-	int variableA = Integer.parseInt(ControlPanel.a.getText());
-	int variableD = Integer.parseInt(ControlPanel.d.getText());
-	int variableE = Integer.parseInt(ControlPanel.e.getText());
+	float variableA;
+	float variableD;
+	float variableE;
 
-	int x;
-	int y;
-
-	for (int i = 0; i < dataPoints.length; i++) {
-	    x = (int) (Math.floor(dataPoints.length / 2) - i);
-	    y = (int) ((variableA * Math.pow((x - variableD), 2)) + variableE);
-	    dataPoints[i] = new Point();
-	    dataPoints[i].setLocation(x, y);
-	    // System.out.println("x: " + dataPoints[i].getX() + " - y: " +
-	    // dataPoints[i].getY());
+	try {
+	    variableA = Float.parseFloat(ControlPanel.a.getText());
+	    variableD = Float.parseFloat(ControlPanel.d.getText());
+	    variableE = Float.parseFloat(ControlPanel.e.getText());
+	} catch (Exception e) {
+	    variableA = 1;
+	    variableD = 0;
+	    variableE = 0;
 	}
-	// System.out.println(" ------- ");
+
+	int xLength = 1000;
+	float x;
+	float y;
+
+	dataPoints.clear();
+
+	for (int i = (0 - xLength - 1); i < xLength; i++) {
+	    x = i;
+	    y = (float) ((variableA * Math.pow((x - variableD), 2)) + variableE);
+	    Point p = new Point();
+	    p.setLocation(x, y);
+	    dataPoints.add(p);
+	}
     }
 
     private void render() {
-	int pixelStep = 10; // weird .. i know ...
 	BufferStrategy bs = this.getBufferStrategy();
 
 	if (bs == null) {
@@ -77,9 +89,9 @@ public class Main extends Canvas implements Runnable {
 	Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
 
 	g2d.setColor(Color.black);
-	g2d.fillRect(0, 0, getWidth(), getHeight());
-
+	g2d.fillRect(0, 0, WIDTH, HEIGHT);
 	g2d.translate(WIDTH / 2, HEIGHT / 2);
+	g2d.rotate(Math.toRadians(180));
 
 	// --- path _ start
 
@@ -88,9 +100,15 @@ public class Main extends Canvas implements Runnable {
 
 	GeneralPath path = new GeneralPath();
 
-	path.moveTo((int) dataPoints[0].getX() * pixelStep, (int) dataPoints[0].getY() * pixelStep);
-	for (int i = 0; i < dataPoints.length; i++) {
-	    path.lineTo(dataPoints[i].getX() * pixelStep, dataPoints[i].getY() * pixelStep);
+	path.moveTo(
+		((Point) dataPoints.firstElement()).getX(),
+		((Point) dataPoints.firstElement()).getY()
+		);
+	for (int i = 1; i < dataPoints.size(); i++) {
+	    path.lineTo(
+		    ((Point) dataPoints.elementAt(i)).getX(),
+		    ((Point) dataPoints.elementAt(i)).getY()
+		    );
 	}
 	g2d.draw(path);
 

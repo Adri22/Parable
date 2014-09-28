@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 public class ControlPanel extends JPanel {
 
-    // JButton applyButton;
+    private static final long serialVersionUID = 1L;
     private JPanel formularPanel;
     private JLabel formula1;
     public static JTextField a;
@@ -20,20 +20,18 @@ public class ControlPanel extends JPanel {
     public static JTextField e;
 
     public ControlPanel() {
-	// applyButton = new JButton("apply");
 	formularPanel = new JPanel();
 	formula1 = new JLabel("y = ");
-	a = new JTextField(2);
+	a = new JTextField(3);
 	formula2 = new JLabel("(x - ");
-	d = new JTextField(2);
+	d = new JTextField(3);
 	formula3 = new JLabel(") + ");
-	e = new JTextField(2);
+	e = new JTextField(3);
 
 	a.setText("1");
 	d.setText("0");
 	e.setText("0");
 
-	// this.add(applyButton);
 	formularPanel.add(formula1);
 	formularPanel.add(a);
 	formularPanel.add(formula2);
