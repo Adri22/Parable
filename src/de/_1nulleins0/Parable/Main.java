@@ -137,7 +137,7 @@ public class Main extends Canvas implements Runnable {
     }
 
     public static void main(String[] args) {
-	new Window(1024, 768, "Parable", new Main());
+	new Window(800, 600, "Parable", new Main());
     }
 
 }
